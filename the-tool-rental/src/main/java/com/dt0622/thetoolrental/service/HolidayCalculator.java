@@ -1,59 +1,79 @@
 package com.dt0622.thetoolrental.service;
 
 import org.springframework.stereotype.Service;
-import java.lang.Math;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.Calendar;
+
+// TODO: review this file
+//import jakarta.validation.constraints.Max;
+//import jakarta.validation.constraints.NotNull;
+
+//import java.lang.Math;
+//import java.text.ParseException;
+//import java.text.SimpleDateFormat;
+//import java.util.Date;
+//import java.util.Calendar;
+//import java.time.temporal.ChronoField;
 import java.time.DayOfWeek;
-import java.time.temporal.ChronoField;
+import java.time.LocalDate;
 
 @Service
 // TODO: rename to RentalCalculator
 public class HolidayCalculator {
   private LocalDate startDate;
   private LocalDate endDate;
-  private SimpleDateFormat sdf1 = new SimpleDateFormat("MM/dd/yy");
   private int startYear;
-  private int startMonth;
-  private int startDay;
   private int endYear;
-  private int endMonth;
-  private int endDay;
-  private int rentalYearDifference;
 
   public HolidayCalculator(LocalDate startDate, LocalDate endDate) {
+    // LocalDate maxStartDate = endDate.minusDays(1);
+    // @Max(maxStartDate);
     this.startDate = startDate;
     this.startYear = startDate.getYear();
-    this.startMonth = startDate.getMonthValue();
-    this.startDay = startDate.getDayOfMonth();
-
     this.endDate = endDate;
     this.endYear = endDate.getYear();
-    this.endMonth = endDate.getMonthValue();
-    this.endDay = endDate.getDayOfMonth();
-
-    this.rentalYearDifference = this.endYear - this.startYear;
   }
 
-  private static LocalDate calculateObservedLaborDateFor(int year) {
-    LocalDate observedHolidayDate;
-    LocalDate startOfSeptemberDate = LocalDate.parse(String.format("%d-09-01", year));
-    int startOfSeptemberDayValue = startOfSeptemberDate.getDayOfWeek().getValue();
+  public int totalHolidaysCountWithinRentalRange() {
+    int independenceDayCount = numberOfHolidayCountFor(calculateObservedIndependenceDateFor(startYear),
+        calculateObservedIndependenceDateFor(endYear));
+    int laborDayCount = numberOfHolidayCountFor(calculateObservedLaborDateFor(startYear),
+        calculateObservedLaborDateFor(endYear));
 
-    if (startOfSeptemberDayValue > 1) {
-      int daysToAddInt = 8 - startOfSeptemberDayValue;
-      Long daysToAdd = Long.valueOf(daysToAddInt);
+    return laborDayCount + independenceDayCount;
+  }
 
-      observedHolidayDate = startOfSeptemberDate.plusDays(daysToAdd);
+  private int numberOfHolidayCountFor(LocalDate startYearHolidayDate, LocalDate endYearHolidayDate) {
+    int independenceDayCount = 0;
+
+    int yearDifference = endYear - startYear;
+    boolean isStartYearHolidayWithinRentalRange = isDateWithinDateRange(startYearHolidayDate);
+    boolean isEndYearHolidayWithinRentalRange = isDateWithinDateRange(endYearHolidayDate);
+
+    if (yearDifference > 0) {
+      if (isStartYearHolidayWithinRentalRange) {
+        independenceDayCount++;
+      }
+      if (isEndYearHolidayWithinRentalRange) {
+        independenceDayCount++;
+      }
+      independenceDayCount += yearDifference - 1;
+    } else if (yearDifference == 0) {
+      if (isStartYearHolidayWithinRentalRange || isEndYearHolidayWithinRentalRange) {
+        independenceDayCount++;
+      }
     } else {
-      // First of Sept is a Monday
-      observedHolidayDate = startOfSeptemberDate;
+      // TODO: throw error because this is wrong
+      return 0;
     }
 
-    return observedHolidayDate;
+    return independenceDayCount;
+  }
+
+  private boolean isDateWithinDateRange(LocalDate comparingDate) {
+    boolean isDateAfterOrOnStartDate = startDate.isBefore(comparingDate)
+        || startDate.isEqual(comparingDate);
+    boolean isDateBeforeOrOnEndDate = endDate.isAfter(comparingDate)
+        || endDate.isEqual(comparingDate);
+    return isDateAfterOrOnStartDate && isDateBeforeOrOnEndDate;
   }
 
   private static LocalDate calculateObservedIndependenceDateFor(int year) {
@@ -76,7 +96,21 @@ public class HolidayCalculator {
     return observedHolidayDate;
   }
 
-  public int numberOfHolidays() {
-    return 0;
+  private static LocalDate calculateObservedLaborDateFor(int year) {
+    LocalDate observedHolidayDate;
+    LocalDate startOfSeptemberDate = LocalDate.parse(String.format("%d-09-01", year));
+    int startOfSeptemberDayValue = startOfSeptemberDate.getDayOfWeek().getValue();
+
+    if (startOfSeptemberDayValue > 1) {
+      int daysToAddInt = 8 - startOfSeptemberDayValue;
+      Long daysToAdd = Long.valueOf(daysToAddInt);
+
+      observedHolidayDate = startOfSeptemberDate.plusDays(daysToAdd);
+    } else {
+      // First of Sept is a Monday
+      observedHolidayDate = startOfSeptemberDate;
+    }
+
+    return observedHolidayDate;
   }
 }
