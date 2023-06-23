@@ -2,13 +2,19 @@ package com.dt0622.thetoolrental.repository;
 
 import java.util.List;
 
-import org.springframework.data.repository.CrudRepository;
+import jakarta.transaction.Transactional;
 
 import com.dt0622.thetoolrental.model.Tool;
 
-public interface ToolRepository extends CrudRepository<Tool, Long> {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ToolRepository extends JpaRepository<Tool, String> {
+  Tool findByToolCode(String toolCode);
+
+  List<Tool> findByToolTypeId(String toolTypeId);
 
   List<Tool> findByBrand(String brand);
 
-  Tool findByToolCode(long toolCode);
+  @Transactional
+  void deleteByToolTypeId(String toolTypeId);
 }

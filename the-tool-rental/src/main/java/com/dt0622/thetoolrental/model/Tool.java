@@ -13,15 +13,15 @@ public class Tool {
   // Tool Code - Unique identifier for a tool instance
   @Id
   @Column(name = "toolCode")
-  private Long toolCode;
+  private String toolCode;
 
   /*
    * Tool Type - The type of tool. The type also specifies the daily rental
    * charge,
    * and the days for which the daily rental charge applies.
    */
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "toolType_id", nullable = false)
+  @ManyToOne(fetch = FetchType.EAGER, optional = false)
+  @JoinColumn(name = "toolType_id", referencedColumnName = "id", nullable = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JsonIgnore
   private ToolType toolType;
@@ -33,7 +33,7 @@ public class Tool {
   protected Tool() {
   }
 
-  public Tool(Long toolCode, ToolType toolType, String brand) {
+  public Tool(String toolCode, ToolType toolType, String brand) {
     this.toolCode = toolCode;
     this.toolType = toolType;
     this.brand = brand;
@@ -46,7 +46,7 @@ public class Tool {
         toolCode, toolType.getId(), brand);
   }
 
-  public Long getToolCode() {
+  public String getToolCode() {
     return toolCode;
   }
 
