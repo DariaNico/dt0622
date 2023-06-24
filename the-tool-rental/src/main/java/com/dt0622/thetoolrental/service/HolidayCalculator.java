@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
-@Service
 // TODO: rename to RentalCalculator
 public class HolidayCalculator {
   private LocalDate startDate;

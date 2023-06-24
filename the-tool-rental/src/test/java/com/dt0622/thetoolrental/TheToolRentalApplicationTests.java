@@ -6,8 +6,10 @@ import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.dt0622.thetoolrental.repository.*;
-import com.dt0622.thetoolrental.model.*;
+import com.dt0622.thetoolrental.repository.ToolRepository;
+import com.dt0622.thetoolrental.repository.ToolTypeRepository;
+import com.dt0622.thetoolrental.model.Tool;
+import com.dt0622.thetoolrental.model.ToolType;
 
 @SpringBootTest
 class TheToolRentalApplicationTests {
