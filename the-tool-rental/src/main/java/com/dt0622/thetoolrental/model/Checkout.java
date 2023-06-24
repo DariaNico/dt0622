@@ -22,7 +22,7 @@ public class Checkout {
   // Rental day count - The number of days for which the customer wants to rent
   // the tool. (e.g. 4 days)
   @Min(value = 1, message = "User must Checkout the tool for at least 1 whole rentalDays.")
-  @Column(name = "rentalDays")
+  @Column(name = "rentalDays", columnDefinition = "default '1'")
   private int rentalDays;
   // Discount percent - As a whole number, 0-100 (e.g. 20 = 20%)
   @Range(min = 0, max = 100, message = "The tool Checkout discountPercent must be a whole number between 0 and 100.")

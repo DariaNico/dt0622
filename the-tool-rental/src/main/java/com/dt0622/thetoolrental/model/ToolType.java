@@ -1,6 +1,7 @@
 package com.dt0622.thetoolrental.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 
 // TODO: rename this to rentalData
 @Entity
@@ -11,7 +12,8 @@ public class ToolType {
   @Id
   private String id;
 
-  @Column(name = "dailyCharge", precision = 2, nullable = false)
+  @Min(value = 0, message = "Value should be a positive number")
+  @Column(name = "dailyCharge", nullable = false)
   private float dailyCharge;
 
   @Column(name = "weekdayCharge", columnDefinition = "boolean default true", nullable = false)
@@ -34,13 +36,7 @@ public class ToolType {
     this.holidayCharge = holidayCharge;
   }
 
-  @Override
-  public String toString() {
-    return String.format(
-        "ToolType[id=%s, dailyCharge='%f', weekdayCharge='%b', weekendCharge='%b', holidayCharge='%b']",
-        id, dailyCharge, weekdayCharge, weekendCharge, holidayCharge);
-  }
-
+  // getters
   public String getId() {
     return id;
   }
@@ -59,5 +55,33 @@ public class ToolType {
 
   public Boolean getHolidayCharge() {
     return holidayCharge;
+  }
+
+  // setters
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public void setDailyCharge(float dailyCharge) {
+    this.dailyCharge = dailyCharge;
+  }
+
+  public void setWeekdayCharge(Boolean weekdayCharge) {
+    this.weekdayCharge = weekdayCharge;
+  }
+
+  public void setWeekendCharge(Boolean weekendCharge) {
+    this.weekendCharge = weekendCharge;
+  }
+
+  public void setHolidayCharge(Boolean holidayCharge) {
+    this.holidayCharge = holidayCharge;
+  }
+
+  @Override
+  public String toString() {
+    return String.format(
+        "ToolType[id=%s, dailyCharge='%f', weekdayCharge='%b', weekendCharge='%b', holidayCharge='%b']",
+        id, dailyCharge, weekdayCharge, weekendCharge, holidayCharge);
   }
 }
