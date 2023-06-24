@@ -98,8 +98,8 @@ public class Checkout {
       validateToolExists(tool, toolCode);
       return new RentalAgreement(this, tool.get());
     } catch (ResourceNotFoundException ex) {
-      System.out.println("ResourceNotFoundException occured: " + ex);
-      return new RentalAgreement(this, null);
+      System.out.println("ResourceNotFoundException occured: " + ex + " Unable to complete draftRentalAgreement()");
+      return null;
     }
   }
 
