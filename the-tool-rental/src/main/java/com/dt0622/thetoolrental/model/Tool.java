@@ -14,18 +14,13 @@ public class Tool {
   @Id
   @Column(name = "toolCode")
   private String toolCode;
-
-  /*
-   * Tool Type - The type of tool. The type also specifies the daily rental
-   * charge,
-   * and the days for which the daily rental charge applies.
-   */
+  // Tool Type - The type of tool. The type also specifies the daily rental
+  // charge, and the days for which the daily rental charge applies.
   @ManyToOne(fetch = FetchType.EAGER, optional = false)
   @JoinColumn(name = "toolType_id", referencedColumnName = "id", nullable = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JsonIgnore
   private ToolType toolType;
-
   // Brand - The brand of the ladder, chain saw or jackhammer.
   @Column(name = "brand")
   private String brand;

@@ -3,14 +3,10 @@ package com.dt0622.thetoolrental.model;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import javax.swing.text.html.Option;
-
 import org.hibernate.validator.constraints.Range;
 
 import com.dt0622.thetoolrental.exception.ResourceNotFoundException;
 import com.dt0622.thetoolrental.repository.ToolRepository;
-
-//import com.dt0622.thetoolrental.service.HolidayCalculator;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -41,7 +37,6 @@ public class Checkout {
   protected Checkout() {
   }
 
-  // invoke
   public Checkout(String toolCode, int rentalDays, int discountPercent, LocalDate checkOutDate) {
     this.toolCode = toolCode;
     this.rentalDays = rentalDays;
@@ -60,12 +55,10 @@ public class Checkout {
 
   public int getRentalDays() {
     return rentalDays;
-
   }
 
   public int getDiscountPercent() {
     return discountPercent;
-
   }
 
   public LocalDate getCheckOutDate() {
@@ -79,12 +72,10 @@ public class Checkout {
 
   public void setRentalDays(int rentalDays) {
     this.rentalDays = rentalDays;
-
   }
 
   public void setDiscountPercent(int discountPercent) {
     this.discountPercent = discountPercent;
-
   }
 
   public void setCheckOutDate(LocalDate checkOutDate) {
