@@ -65,6 +65,7 @@ public class RentalAgreement {
   private float finalCharge;
 
   private static final Logger log = LoggerFactory.getLogger(RentalAgreement.class);
+  private static DecimalFormat df = new DecimalFormat("###,###,###,###.##");
 
   protected RentalAgreement() {
   }
@@ -77,10 +78,8 @@ public class RentalAgreement {
     this.toolBrand = tool.getBrand();
     this.rentalDays = checkout.getRentalDays();
     this.checkOutDate = checkout.getCheckOutDate();
-
     this.dueDate = checkOutDate.plusDays(rentalDays);
     this.dailyRentalCharge = toolType.getDailyCharge();
-
     this.chargeDays = new ToolRentalDaysCalculator(toolType, checkOutDate, rentalDays).calculateChargeDays();
     this.preDiscountCharge = roundMoney((float) chargeDays * dailyRentalCharge);
     this.discountPercent = checkout.getDiscountPercent();
@@ -88,24 +87,120 @@ public class RentalAgreement {
     this.finalCharge = preDiscountCharge - discountAmount;
   }
 
+  // getters
+  public String getToolCode() {
+    return toolCode;
+  }
+
+  public String getFormattedToolCode() {
+    return String.format("Tool code: %s", toolCode);
+  }
+
+  public String getToolTypeId() {
+    return toolTypeId;
+  }
+
+  public String getFormattedToolTypeId() {
+    return String.format("Tool type: %s", toolTypeId);
+  }
+
+  public String getToolBrand() {
+    return toolBrand;
+  }
+
+  public String getFormattedToolBrand() {
+    return String.format("Tool brand: %s", toolBrand);
+  }
+
+  public int getRentalDays() {
+    return rentalDays;
+  }
+
+  public String getFormattedRentalDays() {
+    return String.format("Rental days: %d days", rentalDays);
+  }
+
+  public LocalDate getCheckOutDate() {
+    return checkOutDate;
+  }
+
+  public String getFormattedCheckOutDate() {
+    return String.format("Check out date: %s", formatLocalDate(checkOutDate));
+  }
+
+  public LocalDate getDueDate() {
+    return dueDate;
+  }
+
+  public String getFormattedDueDate() {
+    return String.format("Due date: %s", formatLocalDate(dueDate));
+  }
+
+  public float getDailyRentalCharge() {
+    return dailyRentalCharge;
+  }
+
+  public String getFormattedDailyRentalCharge() {
+    return String.format("Daily rental charge: $%f", df.format(dailyRentalCharge));
+  }
+
+  public int getChargeDays() {
+    return chargeDays;
+  }
+
+  public String getFormattedChargeDays() {
+    return String.format("Charge days: %d days", chargeDays);
+  }
+
+  public float getPreDiscountCharge() {
+    return preDiscountCharge;
+  }
+
+  public String getFormattedPreDiscountCharge() {
+    return String.format("Pre-discount charge: $%f", df.format(preDiscountCharge));
+  }
+
+  public int getDiscountPercent() {
+    return discountPercent;
+  }
+
+  public String getFormattedDiscountPercent() {
+    return String.format("Discount percent: %d%%", discountPercent);
+  }
+
+  public float getDiscountAmount() {
+    return discountAmount;
+  }
+
+  public String getFormattedDiscountAmount() {
+    return String.format("Discount amount: $%f", df.format(discountAmount));
+  }
+
+  public float getFinalCharge() {
+    return finalCharge;
+  }
+
+  public String getFormattedFinalCharge() {
+    return String.format("Final charge: $%f", df.format(finalCharge));
+  }
+
   @Bean
   public CommandLineRunner logToConsole() {
     return (args) -> {
-      DecimalFormat df = new DecimalFormat("###,###,###,###.##");
       log.info("Logging RentalAgreement Details:");
       log.info("-------------------------------");
-      log.info(String.format("Tool code: %s", toolCode));
-      log.info(String.format("Tool type: %s", toolTypeId));
-      log.info(String.format("Tool brand: %s", toolBrand));
-      log.info(String.format("Rental days: %d days", rentalDays));
-      log.info(String.format("Check out date: %s", formatLocalDate(checkOutDate)));
-      log.info(String.format("Due date: %s", formatLocalDate(dueDate)));
-      log.info(String.format("Daily rental charge: $%f", df.format(dailyRentalCharge)));
-      log.info(String.format("Charge days: %d days", chargeDays));
-      log.info(String.format("Pre-discount charge: $%f", df.format(preDiscountCharge)));
-      log.info(String.format("Discount percent: %d%%", discountPercent));
-      log.info(String.format("Discount amount: $%f", df.format(discountAmount)));
-      log.info(String.format("Final charge: $%f", df.format(finalCharge)));
+      log.info(getFormattedToolCode());
+      log.info(getFormattedToolTypeId());
+      log.info(getFormattedToolBrand());
+      log.info(getFormattedRentalDays());
+      log.info(getFormattedCheckOutDate());
+      log.info(getFormattedDueDate());
+      log.info(getFormattedDailyRentalCharge());
+      log.info(getFormattedChargeDays());
+      log.info(getFormattedPreDiscountCharge());
+      log.info(getFormattedDiscountPercent());
+      log.info(getFormattedDiscountAmount());
+      log.info(getFormattedFinalCharge());
       log.info("-------------------------------");
       log.info("");
     };
@@ -120,15 +215,3 @@ public class RentalAgreement {
     return localDate.format(dateTimeFormatter);
   }
 }
-
-// Rental Agreement should include a method that can print the above values as
-// text to the console like
-// this:
-// Tool code: LADW
-// Tool type: Ladder
-// ...
-// Final charge: $9.99
-// with formatting as follows:
-// ● Date mm/dd/yy
-// ● Currency $9,999.99
-// ● Percent 99%

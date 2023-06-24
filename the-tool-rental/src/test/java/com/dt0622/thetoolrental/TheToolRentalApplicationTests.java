@@ -2,14 +2,19 @@ package com.dt0622.thetoolrental;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Assertions;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.dt0622.thetoolrental.repository.ToolRepository;
-import com.dt0622.thetoolrental.repository.ToolTypeRepository;
-import com.dt0622.thetoolrental.model.Tool;
-import com.dt0622.thetoolrental.model.ToolType;
+import com.dt0622.thetoolrental.repository.*;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.dt0622.thetoolrental.model.*;
 
 @SpringBootTest
 class TheToolRentalApplicationTests {
@@ -53,5 +58,47 @@ class TheToolRentalApplicationTests {
 
 		ToolType savedToolType = toolRepo.findByToolCode(newTool.getToolCode()).get().getToolType();
 		Assertions.assertEquals("Chainsaw", savedToolType.getId());
+	}
+
+	@Test
+	public void whenRunningTest1__thenAnExceptionIsThrown() {
+		Checkout checkout = new Checkout("JAKR", 5, 101, LocalDate.of(2015, 9, 3));
+
+		assertEquals(1, 0);
+	}
+
+	@Test
+	public void whenRunningTest2__thenAnExceptionIsThrown() {
+		Checkout checkout = new Checkout("LADW", 3, 10, LocalDate.of(2020, 2, 7));
+
+		assertEquals(1, 0);
+	}
+
+	@Test
+	public void whenRunningTest3__thenAnExceptionIsThrown() {
+		Checkout checkout = new Checkout("CHNS", 5, 25, LocalDate.of(2015, 2, 7));
+
+		assertEquals(1, 0);
+	}
+
+	@Test
+	public void whenRunningTest4__thenAnExceptionIsThrown() {
+		Checkout checkout = new Checkout("JAKD", 6, 0, LocalDate.of(2015, 9, 3));
+
+		assertEquals(1, 0);
+	}
+
+	@Test
+	public void whenRunningTest5__thenAnExceptionIsThrown() {
+		Checkout checkout = new Checkout("JAKR", 9, 0, LocalDate.of(2015, 2, 7));
+
+		assertEquals(1, 0);
+	}
+
+	@Test
+	public void whenRunningTest6__thenAnExceptionIsThrown() {
+		Checkout checkout = new Checkout("JAKR", 4, 50, LocalDate.of(2020, 2, 7));
+
+		assertEquals(1, 0);
 	}
 }
