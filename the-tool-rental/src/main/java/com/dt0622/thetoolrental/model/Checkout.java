@@ -1,8 +1,14 @@
 package com.dt0622.thetoolrental.model;
 
 import java.time.LocalDate;
+import java.util.Optional;
+
+import javax.swing.text.html.Option;
 
 import org.hibernate.validator.constraints.Range;
+
+import com.dt0622.thetoolrental.exception.ResourceNotFoundException;
+import com.dt0622.thetoolrental.repository.ToolRepository;
 
 //import com.dt0622.thetoolrental.service.HolidayCalculator;
 
@@ -85,17 +91,21 @@ public class Checkout {
     this.checkOutDate = checkOutDate;
   }
 
-  // @Override
-  // public String toString() {
-  // return String.format(
-  // "ToolType[id=%s, dailyCharge='%f', weekdayCharge='%b', weekendCharge='%b',
-  // holidayCharge='%b']",
-  // id, dailyCharge, weekdayCharge, weekendCharge, holidayCharge);
-  // }
+  public RentalAgreement drafRentalAgreement(ToolRepository toolRepository) {
+    Optional<Tool> tool = toolRepository.findByToolCode(toolCode);
 
-  public RentalAgreement buildRentalAgreement() {
-    return new RentalAgreement();
+    try {
+      validateToolExists(tool, toolCode);
+      return new RentalAgreement(this, tool.get());
+    } catch (ResourceNotFoundException ex) {
+      System.out.println("ResourceNotFoundException occured: " + ex);
+      return new RentalAgreement(this, null);
+    }
   }
 
+  static void validateToolExists(Optional<Tool> tool, String toolCode) throws ResourceNotFoundException {
+    if (!tool.isPresent()) {
+      throw new ResourceNotFoundException(String.format("Tool with tool code '%s' does not exist", toolCode));
+    }
+  }
 }
-// Checkout generates a Rental Agreement instan
