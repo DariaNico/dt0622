@@ -1,10 +1,9 @@
-package com.dt0622.thetoolrental.service;
+package com.dt0622.thetoolrental.helper;
 
 import java.time.LocalDate;
 
 import com.dt0622.thetoolrental.model.ToolType;
 
-// TODO: rename to ToolChargeDaysCalculator
 public class ToolRentalDaysCalculator {
   private LocalDate startDate;
   private int rentalDays;

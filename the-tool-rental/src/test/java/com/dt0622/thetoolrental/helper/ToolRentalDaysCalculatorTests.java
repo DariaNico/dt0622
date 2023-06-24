@@ -1,4 +1,4 @@
-package com.dt0622.thetoolrental.service;
+package com.dt0622.thetoolrental.helper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

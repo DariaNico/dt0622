@@ -6,7 +6,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import com.dt0622.thetoolrental.service.ToolRentalDaysCalculator;
+import com.dt0622.thetoolrental.helper.ToolRentalDaysCalculator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;

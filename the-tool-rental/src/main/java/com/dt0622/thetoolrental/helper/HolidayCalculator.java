@@ -1,6 +1,5 @@
-package com.dt0622.thetoolrental.service;
+package com.dt0622.thetoolrental.helper;
 
-// TODO: review this file and move to different folder (not a @Service)
 // Note: DayOfWeek.getDayOfWeek().getValue() returns an int where Monday (1) and Sunday (7)
 import java.time.DayOfWeek;
 import java.time.LocalDate;
