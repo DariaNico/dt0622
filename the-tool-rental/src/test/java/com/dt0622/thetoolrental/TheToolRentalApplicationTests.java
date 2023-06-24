@@ -18,7 +18,6 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 
-import com.dt0622.thetoolrental.exception.ResourceNotFoundException;
 import com.dt0622.thetoolrental.model.*;
 
 @SpringBootTest
@@ -29,12 +28,6 @@ class TheToolRentalApplicationTests {
 
 	@Autowired
 	private ToolTypeRepository toolTypeRepo;
-
-	@Autowired
-	private CheckoutRepository checkoutRepo;
-
-	@Autowired
-	private RentalAgreementRepository rentalAgreementRepo;
 
 	private ToolType ladder;
 	private ToolType chainsaw;
@@ -176,10 +169,25 @@ class TheToolRentalApplicationTests {
 		assertEquals("Final charge: $14.95", draftedRentalAgreement.getFormattedFinalCharge());
 	}
 
-	// @Test
-	// public void whenRunningTest6__thenAnExceptionIsThrown() {
-	// Checkout checkout = new Checkout("JAKR", 4, 50, LocalDate.of(2020, 2, 7));
+	@Test
+	public void test6__whenCheckoutTryingToDraftRentalAgreement__thenRentalAgreementIsDraftedSuccessfullyWithFieldsCorrectlyCalculated() {
+		targetCheckout = new Checkout("JAKR", 4, 50, LocalDate.of(2020, 7, 2));
+		RentalAgreement draftedRentalAgreement = targetCheckout.draftRentalAgreement(toolRepo);
 
-	// assertEquals(1, 0);
-	// }
+		draftedRentalAgreement.printToConsole();
+
+		assertEquals(targetCheckout, draftedRentalAgreement.getCheckout());
+
+		assertEquals("Tool code: JAKR", draftedRentalAgreement.getFormattedToolCode());
+		assertEquals("Tool type: Jackhammer", draftedRentalAgreement.getFormattedToolTypeId());
+		assertEquals("Tool brand: Ridgid", draftedRentalAgreement.getFormattedToolBrand());
+		assertEquals("Rental days: 4 days", draftedRentalAgreement.getFormattedRentalDays());
+		assertEquals("Check out date: 07/02/20", draftedRentalAgreement.getFormattedCheckOutDate());
+		assertEquals("Daily rental charge: $2.99", draftedRentalAgreement.getFormattedDailyRentalCharge());
+		assertEquals("Charge days: 1 days", draftedRentalAgreement.getFormattedChargeDays());
+		assertEquals("Pre-discount charge: $2.99", draftedRentalAgreement.getFormattedPreDiscountCharge());
+		assertEquals("Discount percent: 50%", draftedRentalAgreement.getFormattedDiscountPercent());
+		assertEquals("Discount amount: $1.50", draftedRentalAgreement.getFormattedDiscountAmount());
+		assertEquals("Final charge: $1.49", draftedRentalAgreement.getFormattedFinalCharge());
+	}
 }

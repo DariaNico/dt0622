@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.hibernate.validator.constraints.Range;
 
-import com.dt0622.thetoolrental.exception.ResourceNotFoundException;
 import com.dt0622.thetoolrental.repository.ToolRepository;
 
 import jakarta.persistence.*;
@@ -89,12 +88,6 @@ public class Checkout {
       return new RentalAgreement(this, tool.get());
     } else {
       return null;
-    }
-  }
-
-  static void validateToolExists(Optional<Tool> tool, String toolCode) throws ResourceNotFoundException {
-    if (!tool.isPresent()) {
-      throw new ResourceNotFoundException(String.format("Tool with tool code '%s' does not exist", toolCode));
     }
   }
 }
