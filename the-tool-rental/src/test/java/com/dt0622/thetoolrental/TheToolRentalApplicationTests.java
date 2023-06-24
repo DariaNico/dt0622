@@ -76,7 +76,8 @@ class TheToolRentalApplicationTests {
 	public Checkout targetCheckout = new Checkout(null, 1, 0, null);
 
 	@Test
-	public void whenRunningTest1__thenAnExceptionIsThrownDueToInvalidDiscountPercent() throws Exception {
+	public void test1__whenTryingToCreateACheckout__thenAnExceptionIsThrownDueToInvalidDiscountPercent()
+			throws Exception {
 		targetCheckout = new Checkout("JAKR", 5, 101, LocalDate.of(2015, 9, 3));
 
 		Set<ConstraintViolation<Checkout>> constraintViolations = validator
@@ -87,7 +88,7 @@ class TheToolRentalApplicationTests {
 	}
 
 	@Test
-	public void whenRunningTest2AndTryingToDraftRentalAgreement__thenReturnsANullDueToNonexistantToolInRepository() {
+	public void test2__whenCheckoutTryingToDraftRentalAgreement__thenRentalAgreementIsDraftedSuccessfullyWithFieldsCorrectlyCalculated() {
 		targetCheckout = new Checkout("LADW", 3, 10, LocalDate.of(2020, 7, 2));
 		RentalAgreement draftedRentalAgreement = targetCheckout.draftRentalAgreement(toolRepo);
 
@@ -108,26 +109,72 @@ class TheToolRentalApplicationTests {
 		assertEquals("Final charge: $3.58", draftedRentalAgreement.getFormattedFinalCharge());
 	}
 
-	// @Test
-	// public void whenRunningTest3__thenAnExceptionIsThrown() {
-	// Checkout checkout = new Checkout("CHNS", 5, 25, LocalDate.of(2015, 2, 7));
+	@Test
+	public void test3__whenCheckoutTryingToDraftRentalAgreement__thenRentalAgreementIsDraftedSuccessfullyWithFieldsCorrectlyCalculated() {
+		targetCheckout = new Checkout("CHNS", 5, 25, LocalDate.of(2015, 7, 2));
+		RentalAgreement draftedRentalAgreement = targetCheckout.draftRentalAgreement(toolRepo);
 
-	// assertEquals(1, 0);
-	// }
+		draftedRentalAgreement.printToConsole();
 
-	// @Test
-	// public void whenRunningTest4__thenAnExceptionIsThrown() {
-	// Checkout checkout = new Checkout("JAKD", 6, 0, LocalDate.of(2015, 9, 3));
+		assertEquals(targetCheckout, draftedRentalAgreement.getCheckout());
 
-	// assertEquals(1, 0);
-	// }
+		assertEquals("Tool code: CHNS", draftedRentalAgreement.getFormattedToolCode());
+		assertEquals("Tool type: Chainsaw", draftedRentalAgreement.getFormattedToolTypeId());
+		assertEquals("Tool brand: Stihl", draftedRentalAgreement.getFormattedToolBrand());
+		assertEquals("Rental days: 5 days", draftedRentalAgreement.getFormattedRentalDays());
+		assertEquals("Check out date: 07/02/15", draftedRentalAgreement.getFormattedCheckOutDate());
+		assertEquals("Daily rental charge: $1.49", draftedRentalAgreement.getFormattedDailyRentalCharge());
+		assertEquals("Charge days: 3 days", draftedRentalAgreement.getFormattedChargeDays());
+		assertEquals("Pre-discount charge: $4.47", draftedRentalAgreement.getFormattedPreDiscountCharge());
+		assertEquals("Discount percent: 25%", draftedRentalAgreement.getFormattedDiscountPercent());
+		assertEquals("Discount amount: $1.12", draftedRentalAgreement.getFormattedDiscountAmount());
+		assertEquals("Final charge: $3.35", draftedRentalAgreement.getFormattedFinalCharge());
+	}
 
-	// @Test
-	// public void whenRunningTest5__thenAnExceptionIsThrown() {
-	// Checkout checkout = new Checkout("JAKR", 9, 0, LocalDate.of(2015, 2, 7));
+	@Test
+	public void test4__whenCheckoutTryingToDraftRentalAgreement__thenRentalAgreementIsDraftedSuccessfullyWithFieldsCorrectlyCalculated() {
+		targetCheckout = new Checkout("JAKD", 6, 0, LocalDate.of(2015, 9, 3));
+		RentalAgreement draftedRentalAgreement = targetCheckout.draftRentalAgreement(toolRepo);
 
-	// assertEquals(1, 0);
-	// }
+		draftedRentalAgreement.printToConsole();
+
+		assertEquals(targetCheckout, draftedRentalAgreement.getCheckout());
+
+		assertEquals("Tool code: JAKD", draftedRentalAgreement.getFormattedToolCode());
+		assertEquals("Tool type: Jackhammer", draftedRentalAgreement.getFormattedToolTypeId());
+		assertEquals("Tool brand: DeWalt", draftedRentalAgreement.getFormattedToolBrand());
+		assertEquals("Rental days: 6 days", draftedRentalAgreement.getFormattedRentalDays());
+		assertEquals("Check out date: 09/03/15", draftedRentalAgreement.getFormattedCheckOutDate());
+		assertEquals("Daily rental charge: $2.99", draftedRentalAgreement.getFormattedDailyRentalCharge());
+		assertEquals("Charge days: 3 days", draftedRentalAgreement.getFormattedChargeDays());
+		assertEquals("Pre-discount charge: $8.97", draftedRentalAgreement.getFormattedPreDiscountCharge());
+		assertEquals("Discount percent: 0%", draftedRentalAgreement.getFormattedDiscountPercent());
+		assertEquals("Discount amount: $0.00", draftedRentalAgreement.getFormattedDiscountAmount());
+		assertEquals("Final charge: $8.97", draftedRentalAgreement.getFormattedFinalCharge());
+
+	}
+
+	@Test
+	public void test5__whenCheckoutTryingToDraftRentalAgreement__thenRentalAgreementIsDraftedSuccessfullyWithFieldsCorrectlyCalculated() {
+		targetCheckout = new Checkout("JAKR", 9, 0, LocalDate.of(2015, 7, 2));
+		RentalAgreement draftedRentalAgreement = targetCheckout.draftRentalAgreement(toolRepo);
+
+		draftedRentalAgreement.printToConsole();
+
+		assertEquals(targetCheckout, draftedRentalAgreement.getCheckout());
+
+		assertEquals("Tool code: JAKR", draftedRentalAgreement.getFormattedToolCode());
+		assertEquals("Tool type: Jackhammer", draftedRentalAgreement.getFormattedToolTypeId());
+		assertEquals("Tool brand: Ridgid", draftedRentalAgreement.getFormattedToolBrand());
+		assertEquals("Rental days: 9 days", draftedRentalAgreement.getFormattedRentalDays());
+		assertEquals("Check out date: 07/02/15", draftedRentalAgreement.getFormattedCheckOutDate());
+		assertEquals("Daily rental charge: $2.99", draftedRentalAgreement.getFormattedDailyRentalCharge());
+		assertEquals("Charge days: 5 days", draftedRentalAgreement.getFormattedChargeDays());
+		assertEquals("Pre-discount charge: $14.95", draftedRentalAgreement.getFormattedPreDiscountCharge());
+		assertEquals("Discount percent: 0%", draftedRentalAgreement.getFormattedDiscountPercent());
+		assertEquals("Discount amount: $0.00", draftedRentalAgreement.getFormattedDiscountAmount());
+		assertEquals("Final charge: $14.95", draftedRentalAgreement.getFormattedFinalCharge());
+	}
 
 	// @Test
 	// public void whenRunningTest6__thenAnExceptionIsThrown() {

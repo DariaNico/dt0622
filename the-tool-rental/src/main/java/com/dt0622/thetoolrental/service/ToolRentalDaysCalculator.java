@@ -43,6 +43,12 @@ public class ToolRentalDaysCalculator {
     this.endDate = startDate.plusDays(rentalDays);
   }
 
+  public void setToolTypeValues(ToolType toolType) {
+    this.shouldChargeWeekdays = toolType.getWeekdayCharge();
+    this.shouldChargeWeekends = toolType.getWeekendCharge();
+    this.shouldChargeHolidays = toolType.getHolidayCharge();
+  }
+
   // main functionality
   public int calculateChargeDays() {
     int chargeDays = rentalDays;

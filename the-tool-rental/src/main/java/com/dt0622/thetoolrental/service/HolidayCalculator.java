@@ -46,7 +46,7 @@ public class HolidayCalculator {
     } else {
       int startDaysToEndOfWeek = 7 - startDateDayOfWeekValue;
       int fullWeeks = (dayRangeSize - startDaysToEndOfWeek - endDateDayOfWeekValue) / 7;
-      int startWeekWeekendCount = startDaysToEndOfWeek < 2 ? 2 : startDaysToEndOfWeek;
+      int startWeekWeekendCount = startDaysToEndOfWeek > 2 ? 2 : startDaysToEndOfWeek;
       int endWeekWeekendCount = endDateDayOfWeekValue < 6 ? 0 : endDateDayOfWeekValue - 5;
 
       weekendDaysCount += startWeekWeekendCount + endWeekWeekendCount + (2 * fullWeeks);
