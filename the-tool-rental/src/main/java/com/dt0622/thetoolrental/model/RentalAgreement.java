@@ -7,22 +7,23 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import com.dt0622.thetoolrental.service.ToolRentalDaysCalculator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-@Configuration
 @Entity
 @Table(name = "rentalAgreements")
 public class RentalAgreement {
+  // Id - unique identifier for rental agreements
   @Id
   @GeneratedValue
   private Long id;
+  // Checkout - clearly connect RentalAgreements with their Checkout instance
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "checkout_id", referencedColumnName = "id")
+  @JsonIgnore
+  private Checkout checkout;
+
   // Tool code - Specified at checkout
   @Column(name = "toolCode")
   private String toolCode;
@@ -64,14 +65,14 @@ public class RentalAgreement {
   @Column(name = "finalCharge")
   private float finalCharge;
 
-  private static final Logger log = LoggerFactory.getLogger(RentalAgreement.class);
-  private static DecimalFormat df = new DecimalFormat("###,###,###,###.##");
+  private static DecimalFormat df = new DecimalFormat("###,###,###,##0.00");
 
   protected RentalAgreement() {
   }
 
   public RentalAgreement(Checkout checkout, Tool tool) {
     ToolType toolType = tool.getToolType();
+    this.checkout = checkout;
 
     this.toolCode = tool.getToolCode();
     this.toolTypeId = toolType.getId();
@@ -88,6 +89,10 @@ public class RentalAgreement {
   }
 
   // getters
+  public Checkout getCheckout() {
+    return checkout;
+  }
+
   public String getToolCode() {
     return toolCode;
   }
@@ -141,7 +146,7 @@ public class RentalAgreement {
   }
 
   public String getFormattedDailyRentalCharge() {
-    return String.format("Daily rental charge: $%f", df.format(dailyRentalCharge));
+    return String.format("Daily rental charge: $%s", df.format(dailyRentalCharge));
   }
 
   public int getChargeDays() {
@@ -157,7 +162,7 @@ public class RentalAgreement {
   }
 
   public String getFormattedPreDiscountCharge() {
-    return String.format("Pre-discount charge: $%f", df.format(preDiscountCharge));
+    return String.format("Pre-discount charge: $%s", df.format(preDiscountCharge));
   }
 
   public int getDiscountPercent() {
@@ -173,7 +178,7 @@ public class RentalAgreement {
   }
 
   public String getFormattedDiscountAmount() {
-    return String.format("Discount amount: $%f", df.format(discountAmount));
+    return String.format("Discount amount: $%s", df.format(discountAmount));
   }
 
   public float getFinalCharge() {
@@ -181,29 +186,27 @@ public class RentalAgreement {
   }
 
   public String getFormattedFinalCharge() {
-    return String.format("Final charge: $%f", df.format(finalCharge));
+    return String.format("Final charge: $%s", df.format(finalCharge));
   }
 
-  @Bean
-  public CommandLineRunner logToConsole() {
-    return (args) -> {
-      log.info("Logging RentalAgreement Details:");
-      log.info("-------------------------------");
-      log.info(getFormattedToolCode());
-      log.info(getFormattedToolTypeId());
-      log.info(getFormattedToolBrand());
-      log.info(getFormattedRentalDays());
-      log.info(getFormattedCheckOutDate());
-      log.info(getFormattedDueDate());
-      log.info(getFormattedDailyRentalCharge());
-      log.info(getFormattedChargeDays());
-      log.info(getFormattedPreDiscountCharge());
-      log.info(getFormattedDiscountPercent());
-      log.info(getFormattedDiscountAmount());
-      log.info(getFormattedFinalCharge());
-      log.info("-------------------------------");
-      log.info("");
-    };
+  public void printToConsole() {
+    System.out.println("");
+    System.out.println("Logging RentalAgreement Details:");
+    System.out.println("-------------------------------");
+    System.out.println(getFormattedToolCode());
+    System.out.println(getFormattedToolTypeId());
+    System.out.println(getFormattedToolBrand());
+    System.out.println(getFormattedRentalDays());
+    System.out.println(getFormattedCheckOutDate());
+    System.out.println(getFormattedDueDate());
+    System.out.println(getFormattedDailyRentalCharge());
+    System.out.println(getFormattedChargeDays());
+    System.out.println(getFormattedPreDiscountCharge());
+    System.out.println(getFormattedDiscountPercent());
+    System.out.println(getFormattedDiscountAmount());
+    System.out.println(getFormattedFinalCharge());
+    System.out.println("-------------------------------");
+    System.out.println("");
   }
 
   private float roundMoney(float floatToRound) {

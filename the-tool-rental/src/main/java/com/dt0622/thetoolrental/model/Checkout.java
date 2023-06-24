@@ -82,14 +82,12 @@ public class Checkout {
     this.checkOutDate = checkOutDate;
   }
 
-  public RentalAgreement drafRentalAgreement(ToolRepository toolRepository) {
+  public RentalAgreement draftRentalAgreement(ToolRepository toolRepository) {
     Optional<Tool> tool = toolRepository.findByToolCode(toolCode);
 
-    try {
-      validateToolExists(tool, toolCode);
+    if (tool.isPresent()) {
       return new RentalAgreement(this, tool.get());
-    } catch (ResourceNotFoundException ex) {
-      System.out.println("ResourceNotFoundException occured: " + ex + " Unable to complete draftRentalAgreement()");
+    } else {
       return null;
     }
   }
