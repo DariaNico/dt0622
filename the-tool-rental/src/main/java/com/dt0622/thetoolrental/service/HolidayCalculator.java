@@ -1,8 +1,6 @@
 package com.dt0622.thetoolrental.service;
 
-import org.springframework.stereotype.Service;
-
-// TODO: review this file
+// TODO: review this file and move to different folder (not a @Service)
 //import jakarta.validation.constraints.Max;
 //import jakarta.validation.constraints.NotNull;
 
@@ -23,8 +21,7 @@ public class HolidayCalculator {
   private int endYear;
 
   public HolidayCalculator(LocalDate startDate, LocalDate endDate) {
-    // LocalDate maxStartDate = endDate.minusDays(1);
-    // @Max(maxStartDate);
+    // TODO: Custom validate startdate is before endDate
     this.startDate = startDate;
     this.startYear = startDate.getYear();
     this.endDate = endDate;
