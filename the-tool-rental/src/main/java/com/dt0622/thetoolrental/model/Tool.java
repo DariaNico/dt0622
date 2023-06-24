@@ -39,13 +39,7 @@ public class Tool {
     this.brand = brand;
   }
 
-  @Override
-  public String toString() {
-    return String.format(
-        "Tool[toolCode=%s, toolType_id='%s', brand='%s']",
-        toolCode, toolType.getId(), brand);
-  }
-
+  // getters
   public String getToolCode() {
     return toolCode;
   }
@@ -57,4 +51,25 @@ public class Tool {
   public String getBrand() {
     return brand;
   }
+
+  // setters
+  public void setToolCode(String toolCode) {
+    this.toolCode = toolCode;
+  }
+
+  public void setToolType(ToolType toolType) {
+    this.toolType = toolType;
+  }
+
+  public void setBrand(String brand) {
+    this.brand = brand;
+  }
+
+  @Override
+  public String toString() {
+    return String.format(
+        "Tool[toolCode=%s, toolType_id='%s', brand='%s']",
+        toolCode, toolType.getId(), brand);
+  }
+
 }
