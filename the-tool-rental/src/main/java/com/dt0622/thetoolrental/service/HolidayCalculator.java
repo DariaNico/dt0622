@@ -5,6 +5,7 @@ package com.dt0622.thetoolrental.service;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
+// FIXME: rename this to HolidayAndWeekendCalculator or something more fitting
 public class HolidayCalculator {
   private LocalDate startDate;
   private LocalDate endDate;
@@ -13,7 +14,6 @@ public class HolidayCalculator {
   private int endYear;
 
   public HolidayCalculator(LocalDate startDate, LocalDate endDate, int dayRangeSize) {
-    // TODO: Custom validate startdate is before endDate
     this.startDate = startDate;
     this.endDate = endDate;
     this.dayRangeSize = dayRangeSize;
@@ -91,8 +91,9 @@ public class HolidayCalculator {
         independenceDayCount++;
       }
     } else {
-      // TODO: throw error because this is wrong
-      return 0;
+      // Invalid scenario where endDate was before startDate
+      // FIXME: add validator or throw error to ensure this is handled in a better way
+      return -1;
     }
 
     return independenceDayCount;
