@@ -1,34 +1,27 @@
 package com.dt0622.thetoolrental.service;
 
 // TODO: review this file and move to different folder (not a @Service)
-//import jakarta.validation.constraints.Max;
-//import jakarta.validation.constraints.NotNull;
-
-//import java.lang.Math;
-//import java.text.ParseException;
-//import java.text.SimpleDateFormat;
-//import java.util.Date;
-//import java.util.Calendar;
-//import java.time.temporal.ChronoField;
+// Note: DayOfWeek.getDayOfWeek().getValue() returns an int where Monday (1) and Sunday (7)
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
-// TODO: rename to RentalCalculator
 public class HolidayCalculator {
   private LocalDate startDate;
   private LocalDate endDate;
+  private int dayRangeSize;
   private int startYear;
   private int endYear;
 
-  public HolidayCalculator(LocalDate startDate, LocalDate endDate) {
+  public HolidayCalculator(LocalDate startDate, LocalDate endDate, int dayRangeSize) {
     // TODO: Custom validate startdate is before endDate
     this.startDate = startDate;
-    this.startYear = startDate.getYear();
     this.endDate = endDate;
+    this.dayRangeSize = dayRangeSize;
+    this.startYear = startDate.getYear();
     this.endYear = endDate.getYear();
   }
 
-  public int totalHolidaysCountWithinRentalRange() {
+  public int totalHolidaysCountWithinDateRange() {
     int independenceDayCount = numberOfHolidayCountFor(calculateObservedIndependenceDateFor(startYear),
         calculateObservedIndependenceDateFor(endYear));
     int laborDayCount = numberOfHolidayCountFor(calculateObservedLaborDateFor(startYear),
@@ -37,23 +30,64 @@ public class HolidayCalculator {
     return laborDayCount + independenceDayCount;
   }
 
+  public int totalWeekendDaysCountWithinDateRange() {
+    int weekendDaysCount = 0;
+    int startDateDayOfWeekValue = startDate.getDayOfWeek().getValue();
+    int endDateDayOfWeekValue = endDate.getDayOfWeek().getValue();
+
+    int startDaysToNextWeekend = exclusiveNumDaysToNextWeekend(startDateDayOfWeekValue);
+    int endDaysToLastWeekend = inclusiveNumDaysToLastWeekend(endDateDayOfWeekValue);
+    int totalDaysToWeekend = startDaysToNextWeekend + endDaysToLastWeekend;
+
+    if (dayRangeSize < 7) {
+      if (dayRangeSize > startDaysToNextWeekend) {
+        weekendDaysCount += dayRangeSize - totalDaysToWeekend;
+      }
+    } else {
+      int startDaysToEndOfWeek = 7 - startDateDayOfWeekValue;
+      int fullWeeks = (dayRangeSize - startDaysToEndOfWeek - endDateDayOfWeekValue) / 7;
+      int startWeekWeekendCount = startDaysToEndOfWeek < 2 ? 2 : startDaysToEndOfWeek;
+      int endWeekWeekendCount = endDateDayOfWeekValue < 6 ? 0 : endDateDayOfWeekValue - 5;
+
+      weekendDaysCount += startWeekWeekendCount + endWeekWeekendCount + (2 * fullWeeks);
+    }
+
+    return weekendDaysCount;
+  }
+
+  private int exclusiveNumDaysToNextWeekend(int dayOfWeekValue) {
+    if (dayOfWeekValue < 6) {
+      return 5 - dayOfWeekValue;
+    } else {
+      return 0;
+    }
+  }
+
+  private int inclusiveNumDaysToLastWeekend(int dayOfWeekValue) {
+    if (dayOfWeekValue < 6) {
+      return dayOfWeekValue;
+    } else {
+      return 0;
+    }
+  }
+
   private int numberOfHolidayCountFor(LocalDate startYearHolidayDate, LocalDate endYearHolidayDate) {
     int independenceDayCount = 0;
 
     int yearDifference = endYear - startYear;
-    boolean isStartYearHolidayWithinRentalRange = isDateWithinDateRange(startYearHolidayDate);
-    boolean isEndYearHolidayWithinRentalRange = isDateWithinDateRange(endYearHolidayDate);
+    boolean isStartYearHolidayWithinRange = isDateWithinDateRange(startYearHolidayDate);
+    boolean isEndYearHolidayWithinRange = isDateWithinDateRange(endYearHolidayDate);
 
     if (yearDifference > 0) {
-      if (isStartYearHolidayWithinRentalRange) {
+      if (isStartYearHolidayWithinRange) {
         independenceDayCount++;
       }
-      if (isEndYearHolidayWithinRentalRange) {
+      if (isEndYearHolidayWithinRange) {
         independenceDayCount++;
       }
       independenceDayCount += yearDifference - 1;
     } else if (yearDifference == 0) {
-      if (isStartYearHolidayWithinRentalRange || isEndYearHolidayWithinRentalRange) {
+      if (isStartYearHolidayWithinRange || isEndYearHolidayWithinRange) {
         independenceDayCount++;
       }
     } else {
@@ -65,11 +99,10 @@ public class HolidayCalculator {
   }
 
   private boolean isDateWithinDateRange(LocalDate comparingDate) {
-    boolean isDateAfterOrOnStartDate = startDate.isBefore(comparingDate)
-        || startDate.isEqual(comparingDate);
+    boolean isDateAfterStartDate = startDate.isBefore(comparingDate);
     boolean isDateBeforeOrOnEndDate = endDate.isAfter(comparingDate)
         || endDate.isEqual(comparingDate);
-    return isDateAfterOrOnStartDate && isDateBeforeOrOnEndDate;
+    return isDateAfterStartDate && isDateBeforeOrOnEndDate;
   }
 
   private static LocalDate calculateObservedIndependenceDateFor(int year) {
