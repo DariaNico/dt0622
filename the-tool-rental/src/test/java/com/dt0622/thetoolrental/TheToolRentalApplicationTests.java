@@ -51,7 +51,7 @@ class TheToolRentalApplicationTests {
 		Tool newTool = new Tool("CHND", chainsaw, "DeWalt");
 		toolRepo.save(newTool);
 
-		ToolType savedToolType = toolRepo.findByToolCode(newTool.getToolCode()).getToolType();
+		ToolType savedToolType = toolRepo.findByToolCode(newTool.getToolCode()).get().getToolType();
 		Assertions.assertEquals("Chainsaw", savedToolType.getId());
 	}
 }
